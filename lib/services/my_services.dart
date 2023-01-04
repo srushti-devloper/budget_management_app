@@ -21,6 +21,14 @@ class MyServices {
     return await _repository.deleteEntryFromBudget("mybudget", budgetId);
   }
 
+  deleteDataSavingService(savingId) async {
+    return await _repository.deleteEntryFromSaving("my_savings", savingId);
+  }
+
+  deleteDataExpanceService(expanceId) async {
+    return await _repository.deleteEntryFromExpence("my_expance", expanceId);
+  }
+
   fetchDataBudgetService(monthname) async {
     return await _repository.fetchEntryByMonthExpence("mybudget", monthname);
   }

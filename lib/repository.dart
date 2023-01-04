@@ -22,7 +22,6 @@ class Repository {
 
   insertBudget(table, data) async {
     var connection = await database;
-    print("Insert --------------------------Budget");
     return await connection?.insert(table, data);
   }
 
@@ -32,6 +31,12 @@ class Repository {
   }
 
   deleteEntryFromBudget(table, itemId) async {
+    var connection = await database;
+    return await connection
+        ?.rawQuery("DELETE FROM $table WHERE id = ? ", [itemId]);
+  }
+
+  deleteEntryFromSaving(table, itemId) async {
     var connection = await database;
     return await connection
         ?.rawQuery("DELETE FROM $table WHERE id = ? ", [itemId]);
@@ -82,12 +87,6 @@ class Repository {
   selectMySaving(table) async {
     var connection = await database;
     return await connection?.rawQuery("select *from $table");
-  }
-
-  deleteEntryFromSaving(table, itemId) async {
-    var connection = await database;
-    return await connection
-        ?.rawQuery("DELETE FROM $table WHERE id = ? ", [itemId]);
   }
 
   fetchEntryByMonthSaving(table, monthname) async {

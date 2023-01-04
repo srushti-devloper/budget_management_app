@@ -14,8 +14,9 @@ class MySavingsPage extends StatefulWidget {
 
 class _MySavingsPageState extends State<MySavingsPage> {
   final List<MyExpanse> _expansehistorylist = <MyExpanse>[];
-  var myservices = MyServices();
-  var mybudget_month = 0;
+  var _myservices = MyServices();
+
+  var totalBudget = 0;
 
   @override
   void initState() {
@@ -24,8 +25,8 @@ class _MySavingsPageState extends State<MySavingsPage> {
   }
 
   void getExpanceHistory() async {
+    var expanseresult = await _myservices.getExpanceHistory();
     _expansehistorylist.clear();
-    var expanseresult = await myservices.getExpanceHistory();
     if (expanseresult != null) {
       expanseresult.forEach((Entry) {
         setState(() {
@@ -34,7 +35,7 @@ class _MySavingsPageState extends State<MySavingsPage> {
           myExpanse.title = Entry['title'];
           myExpanse.amount = Entry['amount'];
           myExpanse.created_at = Entry['created_at'];
-
+          totalBudget += myExpanse.amount!;
           _expansehistorylist.add(myExpanse);
         });
       });
@@ -79,10 +80,48 @@ class _MySavingsPageState extends State<MySavingsPage> {
               ),
               subtitle: Text(_expansehistorylist[index].title.toString()),
               trailing: Text(_expansehistorylist[index].created_at.toString()),
+              onLongPress: () {
+                _deleteExpanceEntery(
+                    context, _expansehistorylist[index], index);
+              },
             ),
           );
         }),
       ),
     );
+  }
+
+  _deleteExpanceEntery(BuildContext context, MyExpanse myExpanse, int index) {
+    return showDialog(
+        context: context,
+        builder: (param) {
+          return AlertDialog(
+            title: const Text("Are you sure you wany to delete?"),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                      onPressed: () async {
+                        var result = await _myservices
+                            .deleteDataExpanceService(myExpanse.id);
+
+                        //if (result == 1) {
+                        Navigator.pop(context, totalBudget);
+                        _expansehistorylist.removeAt(index);
+                        setState(() {});
+                        //}
+                      },
+                      child: const Text("Yes")),
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context, totalBudget);
+                      },
+                      child: const Text("No"))
+                ],
+              )
+            ],
+          );
+        });
   }
 }

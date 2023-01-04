@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:budget_tracker_app/modal/my_budget.dart';
 import 'package:budget_tracker_app/services/my_services.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +66,7 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
             ),
             TextFormField(
               controller: amountController,
+              keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 label: const Text(
                   "Enter Amount",
@@ -125,8 +128,8 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                           toastLength: Toast.LENGTH_SHORT,
                           gravity: ToastGravity.BOTTOM,
                           timeInSecForIosWeb: 2,
-                          textColor: Colors.blue,
-                          backgroundColor: Colors.grey);
+                          textColor: Colors.white,
+                          backgroundColor: Colors.green);
 
                       Navigator.pop(context, budget.amount);
                     } else {

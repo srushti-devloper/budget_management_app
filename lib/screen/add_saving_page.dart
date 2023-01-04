@@ -102,6 +102,7 @@ class _AddSavingPageState extends State<AddSavingPage> {
                       //Enter Amount TextFormDield
                       TextFormField(
                         controller: amountController,
+                        keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           label: const Text(
                             "Enter Amount",
@@ -181,7 +182,7 @@ class _AddSavingPageState extends State<AddSavingPage> {
                                     blurRadius: 6),
                               ]),
                           child: const Text(
-                            "Add Expense",
+                            "Add Saving",
                             style: TextStyle(color: Colors.white, fontSize: 26),
                           ),
                         ),

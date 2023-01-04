@@ -11,7 +11,6 @@ class DatabaseConnection {
   }
 
   Future<void> createDatabase(Database database, int version) async {
-    print("Database create");
     await database.execute(
         "create table mybudget (id INTEGER PRIMARY KEY autoincrement, month TEXT, title TEXT, amount integer,created_at TEXT)");
 

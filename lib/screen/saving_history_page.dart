@@ -12,8 +12,9 @@ class SavingHistoryPage extends StatefulWidget {
 }
 
 class _SavingHistoryPageState extends State<SavingHistoryPage> {
-  List<MySaving> mySavingList = [];
+  final List<MySaving> _savinghistorylist = <MySaving>[];
   final _myservices = MyServices();
+  var totalsaving = 0;
   @override
   void initState() {
     getSavingHistory();
@@ -26,20 +27,22 @@ class _SavingHistoryPageState extends State<SavingHistoryPage> {
       appBar: AppBar(title: const Text("Saving History")),
       body: ListView.builder(
         shrinkWrap: true,
-        key: Key(mySavingList.length.toString()),
-        itemCount: mySavingList.length,
+        key: Key(_savinghistorylist.length.toString()),
+        itemCount: _savinghistorylist.length,
         itemBuilder: ((context, index) {
           return Card(
             child: ListTile(
               onTap: (() {}),
               leading: const Icon(Icons.attach_money_outlined),
               title: Text(
-                mySavingList[index].amount.toString(),
+                _savinghistorylist[index].amount.toString(),
                 style: const TextStyle(fontSize: 20, color: Colors.blue),
               ),
-              subtitle: Text(mySavingList[index].month ?? ""),
-              trailing: Text(mySavingList[index].created_at.toString()),
-              onLongPress: () {},
+              subtitle: Text(_savinghistorylist[index].month ?? ""),
+              trailing: Text(_savinghistorylist[index].created_at.toString()),
+              onLongPress: () {
+                _deleteSavingEntery(context, _savinghistorylist[index], index);
+              },
             ),
           );
         }),
@@ -61,7 +64,7 @@ class _SavingHistoryPageState extends State<SavingHistoryPage> {
 
   Future<void> getSavingHistory() async {
     var result = await _myservices.getSavingHistory();
-    mySavingList.clear();
+    _savinghistorylist.clear();
     if (result != null) {
       result.forEach((entry) {
         setState(() {
@@ -71,9 +74,43 @@ class _SavingHistoryPageState extends State<SavingHistoryPage> {
           mySaving.created_at = entry['created_at'];
           mySaving.amount = entry['amount'];
 
-          mySavingList.add(mySaving);
+          _savinghistorylist.add(mySaving);
         });
       });
     }
+  }
+
+  _deleteSavingEntery(BuildContext context, MySaving mySaving, int index) {
+    return showDialog(
+        context: context,
+        builder: (param) {
+          return AlertDialog(
+            title: const Text("Are you sure you wany to delete?"),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                      onPressed: () async {
+                        var result = await _myservices
+                            .deleteDataSavingService(mySaving.id);
+
+                        //if (result == 1) {
+                        Navigator.pop(context, totalsaving);
+                        _savinghistorylist.removeAt(index);
+                        setState(() {});
+                        //}
+                      },
+                      child: const Text("Yes")),
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context, totalsaving);
+                      },
+                      child: const Text("No"))
+                ],
+              )
+            ],
+          );
+        });
   }
 }

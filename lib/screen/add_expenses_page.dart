@@ -101,6 +101,7 @@ class _AddExpencesPgaeState extends State<AddExpencesPgae> {
                       //Enter Amount TextFormDield
                       TextFormField(
                         controller: amountController,
+                        keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           label: const Text(
                             "Enter Amount",
